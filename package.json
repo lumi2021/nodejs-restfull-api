@@ -1,0 +1,30 @@
+{
+  "name": "nodejs-restfull-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "ts-node-dev src/main.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lumi2021/nodejs-restfull-api.git"
+  },
+  "keywords": [],
+  "author": "lumi2021",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lumi2021/nodejs-restfull-api/issues"
+  },
+  "homepage": "https://github.com/lumi2021/nodejs-restfull-api#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.5.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2"
+  }
+}
