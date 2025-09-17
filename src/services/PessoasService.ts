@@ -8,7 +8,7 @@ export class PessoasService implements IPessoasService {
     constructor(pessoasRepo: IPessoasRepository) {
         this.pessoaRepository = pessoasRepo;
     }
-
+    
     pessoaRepository: IPessoasRepository;
 
     public registerNewPessoa(pessoa: RegisterPessoaBody): Pessoa {
@@ -20,5 +20,14 @@ export class PessoasService implements IPessoasService {
         this.pessoaRepository.save(pessoaModel);
 
         return pessoaModel;
+    }
+
+    getAllPessoa(): Pessoa[] {
+        let pessoaArr = this.pessoaRepository.getAll();
+        return pessoaArr;
+    }
+
+    getByIdPessoa(id: number): Pessoa | undefined {
+        return this.pessoaRepository.getById(id);
     }
 }
