@@ -1,5 +1,7 @@
 import { AreasController } from "./controllers/AreasController";
+import { AuthController } from "./controllers/AuthController";
 import { IAreasController } from "./controllers/core/IAreasController";
+import { IAuthController } from "./controllers/core/IAuthController";
 import { IPessoasController } from "./controllers/core/IPessoasController";
 import { IPresencasController } from "./controllers/core/IPresencasController";
 import { PessoasController } from "./controllers/PessoasController";
@@ -29,11 +31,13 @@ var pessoasService: IPessoasService;
 var areasService: IAreasService;
 var presencasService: IPresencasService;
 
+var authController: IAuthController;
 var pessoasController: IPessoasController;
 var areasController: IAreasController;
 var presencasController: IPresencasController;
 
 export interface Controllers {
+    auth: IAuthController,
     pessoas: IPessoasController,
     areas: IAreasController,
     presencas: IPresencasController,
@@ -47,11 +51,13 @@ export function setupDependencyInjection(): Controllers {
     areasService = new AreasService(areasRepository);
     presencasService = new PresencasService(pessoasRepository, areasRepository, presencasRepository);
 
+    authController = new AuthController();
     pessoasController = new PessoasController(pessoasService);
     areasController = new AreasController(areasService);
     presencasController = new PresencasController(presencasService);
 
     return {
+        auth: authController,
         pessoas: pessoasController,
         areas: areasController,
         presencas: presencasController

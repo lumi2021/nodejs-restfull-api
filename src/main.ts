@@ -5,10 +5,24 @@ import dotenv from 'dotenv';
 import { areas_setupRoutes } from './routes/areasRoutes';
 import { pessoas_setupRoutes } from './routes/pessoasRoutes';
 import { presencas_setupRoutes } from './routes/presencasRoutes';
+import { auth_setupRoutes } from './routes/authRoutes';
 
+// Assegurar que as configurações do ambiente
+// estão corretas
 dotenv.config();
+if (
+  !process.env.SERVER_PORT
+  || !process.env.SERVER_ADDRESS
+  //|| !process.env.GOOGLE_CLIENT_ID
+  //|| !process.env.GOOGLE_CLIENT_SECRET
+) {
+  console.log("Arquivo .env inválido ou inexistente");
+  process.exit(1);
+}
+
+
 const app = express();
-const PORT = 3000;
+const PORT = process.env.SERVER_PORT;
 
 app.use(express.json());
 console.clear();
@@ -19,10 +33,9 @@ const controllers: Controllers = setupDependencyInjection();
 app.use("/api/v1/presencas", presencas_setupRoutes(controllers));
 app.use("/api/v1/pessoas", pessoas_setupRoutes(controllers));
 app.use("/api/v1/areas", areas_setupRoutes(controllers));
+//app.use("/api/v1/auth", auth_setupRoutes(controllers));
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+app.listen(PORT, () => { console.log(`Servidor rodando em ${process.env.SERVER_ADDRESS}`); });
 
 // Routes:
 

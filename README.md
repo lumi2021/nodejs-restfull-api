@@ -28,14 +28,102 @@ A API é desenvolvida em typescript e foca em usar o mínimo possível de depend
 
 **usando tsc + node:**
 - clone o repositório;
+- crie um arquivo `.env` contendo as chaves `SERVER_PORT=3000` e `SERVER_ADDRESS=http://localhost:3000`
 - abra o terminal dentro do diretório do projeto;
 - execute `tsc`;
 - execute `node dist/main.js`
 
 **usando ts-node:**
 - clone o repositório;
+- crie um arquivo `.env` contendo as chaves `SERVER_PORT=3000` e `SERVER_ADDRESS=http://localhost:3000`
 - abra o terminal dentro do diretório do projeto;
 - execute `npx ts-node src/main.ts`
+
+## Lista de endpoints
+
+### **POST** `/api/v1/pessoas` - Registra uma nova pessoa
+**body:**
+```json
+{
+    "nome": string,
+    "funcao": string
+}
+```
+**retorna:** `Pessoa`
+
+---
+### **GET** `/api/v1/pessoas` - Retorna a lista de todas as pessoas registradas
+**retorna:** `Pessoa[]`
+
+---
+### **REMOVE** `/api/v1/pessoas/:id` - Remove o registro de uma pessoa
+**params:**
+- `:id` - O identificador do registro
+
+**retorna:** `void`
+
+---
+### **GET** `/api/v1/pessoas/:id` - Retorna o registro completo de uma pessoa
+**params:**
+- `id` - O identificador do registro
+
+**retorna:** `Pessoa`
+
+---
+### **POST** `/api/v1/areas` - Registra uma nova área
+**body:**
+```json
+{
+    "nome": string,
+    "local": string,
+    "tipo": string
+}
+```
+**retorna:** `Area`
+
+---
+### **GET** `/api/v1/areas` - Retorna a lista de todas as áreas registradas
+**retorna:** `Area[]`
+
+---
+### **REMOVE** `/api/v1/areas/:id` - Remove o registro de uma área
+**params:**
+- `id: number` - O identificador do registro
+
+**retorna:** `void`
+
+---
+### **GET** `/api/v1/areas/:id` - Retorna o registro completo de uma área
+**params:**
+- `id: number` - O identificador do registro
+
+**retorna:** `Area`
+
+---
+### **POST** `/api/v1/presencas:pid/:aid` - Registra a presença de uma pessoa em uma area
+**params:**
+- `pid: number` - O identificador do registro da pessoa
+- `aid: number` - O identificador do registro da área
+
+**retorna:** `void`
+
+---
+### **GET**  `/api/v1/presencas` - retorna toda a lista de presença em um intervalo
+**query:**
+- `pessoaid: number` - Filtra pelo identificador de uma pessoa
+- `areaid: number` - Filtra pelo identificador de uma área
+- `ibeg: Date` - Define o início do intervalo
+- `iend: Date` - Define o fim do intervalo
+
+**retorna:**
+```
+{
+    "inicio" : Date,
+    "fim": Date,
+    "lista": Presenca
+}
+```
+
 
 ## Processo de desenvolvimento
 
@@ -60,7 +148,7 @@ tentar automatizar o processo.
 
 ## Decisões técnicas
 
-**Modularidade:** \
+### Modularidade:
 Como um dos requisitos do teste, a extrutura da API é completamente modular,
 seguindo os principais padrões de design do mercado.
 A API é dividida em componentes de rota, controladores, serviços e repositório,
@@ -68,13 +156,13 @@ sendo conectados através de ijeção de dependência. A declaração e implemen
 dos componentes são separadas, permitindo modificações, incrementação e refatoração
 independente.
 
-**Validação de dados:** \
+### Validação de dados:
 Validação dos dados é um problema em qualquer API, mas ter que assegurar isso em
 uma linguagem como typescript é um desafio adicional, visto que a tipagem é garantida
 apenas em tempo de compilação. Devido a isso, preferi optar por redundância, fazendo
 verificações dos valores de parâmetros sempre que possível.
 
-**Tratamento de erros:** \
+### Tratamento de erros:
 É importante que a API sempre retorne erros legiveis para que o cliente saiba tratar
 a dependência faltante. Devido a modularidade, preferi deixar qualquer coisa relacionada
 a requisição no escopo do controlador e usar `throw` para retornar erros internos.
@@ -83,11 +171,18 @@ Usando blocos `try...catch` o controlador decide a melhor maneira de retornar o 
 geralmente com um status code adequado e um pequeno objeto contendo uma mensagem de erro
 legivel e, algumas vezes, uma mensagem que pode ser direcionada ao usuário.
 
-**Banco de dados:** \
+### Banco de dados:
 Para simplificação do desenvolvimento, o banco de dados é emulado no componente
 interno do repositório. Pela natureza modular do sistema, não seria
 necessário muito esforço para incluir um componente específico para
 se conectar a um banco de dados real.
+
+### Login com serviço externo:
+Por ser opcional, eu deixei para tentar implementar esse recurso por último. Já tive alguma
+experiência com OAuth2 com a API do Spotify, mas não consegui solucionar algumas dependências
+de segurança da google. A falta de um frontend para redirecionamento também foi algo que me
+não me permitiu concluir o requerimento. Mesmo que não esteja funcionando, ainda deixei os
+controladores relacionados a autenticação no código fonte para serem analizados.
 
 
 ## Sujesstões de melhoria
@@ -101,6 +196,8 @@ fazer por não ter tanto costume com o ecocistema muitas vezes perigoso dos paco
 Melhorias menores incluem:
 
 - Implementar verificação de CORS;
+- Terminar o sistema de login que acabou ficando incompleto e não funcional devido a tempo
+e problemas com a API do google;
 - Adicionar rotinas para higienização de dados caso bancos de dados SQL sejam integrados;
 - Implementar o registro de presença usando websockets, visto que são um pouco mais 
 rápidos e leves que http.
