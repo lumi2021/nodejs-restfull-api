@@ -43,7 +43,7 @@ A API é desenvolvida em typescript e foca em usar o mínimo possível de depend
 
 ### **POST** `/api/v1/pessoas` - Registra uma nova pessoa
 **body:**
-```json
+```ts
 {
     "nome": string,
     "funcao": string
@@ -72,7 +72,7 @@ A API é desenvolvida em typescript e foca em usar o mínimo possível de depend
 ---
 ### **POST** `/api/v1/areas` - Registra uma nova área
 **body:**
-```json
+```ts
 {
     "nome": string,
     "local": string,
@@ -116,7 +116,7 @@ A API é desenvolvida em typescript e foca em usar o mínimo possível de depend
 - `iend: Date` - Define o fim do intervalo
 
 **retorna:**
-```
+```ts
 {
     "inicio" : Date,
     "fim": Date,
