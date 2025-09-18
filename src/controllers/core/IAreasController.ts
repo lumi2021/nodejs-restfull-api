@@ -7,5 +7,6 @@ export interface IAreasController {
     registerArea(req: Request<{}, {}, RegisterAreaBody>, res: Response<Area>): void;
     getAllAreas(req: Request<{}, {}, {}>, res: Response<Area[]>): void;
     getByIdArea(req: Request<{id: number}, {}, {}>, res: Response<Area>): void;
+    removeByIdArea(req: Request<{id: number}, {}, {}>, res: Response): void;
 
 }

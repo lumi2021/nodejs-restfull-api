@@ -36,4 +36,8 @@ export class PessoasService implements IPessoasService {
     getByIdPessoa(id: number): Pessoa | undefined {
         return this.pessoaRepository.getById(id);
     }
+
+    removeByIdPessoa(id: number): boolean {
+        return this.pessoaRepository.remove(id);
+    }
 }

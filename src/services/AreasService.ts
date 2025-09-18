@@ -29,4 +29,8 @@ export class AreasService implements IAreasService {
     getByIdArea(id: number): Area | undefined {
         return this.areasRepository.getById(id);
     }
+
+    removeByIdArea(id: number): boolean {
+        return this.areasRepository.remove(id);
+    }
 }

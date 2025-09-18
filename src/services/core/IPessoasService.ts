@@ -6,5 +6,6 @@ export interface IPessoasService {
     registerNewPessoa(pessoa: RegisterPessoaBody): Pessoa;
     getAllPessoa(): Pessoa[];
     getByIdPessoa(id: number): Pessoa | undefined;
+    removeByIdPessoa(id: number): boolean;
 
 }

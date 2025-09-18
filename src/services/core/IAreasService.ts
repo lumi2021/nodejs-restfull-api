@@ -6,5 +6,6 @@ export interface IAreasService {
     registerNewArea(pessoa: RegisterAreaBody): Area;
     getAllAreas(): Area[];
     getByIdArea(id: number): Area | undefined;
+    removeByIdArea(id: number): boolean;
 
 }

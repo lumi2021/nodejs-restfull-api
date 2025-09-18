@@ -96,7 +96,7 @@ export class PessoasController implements IPessoasController {
         }
     }
 
-    getByIdPessoas(req: Request<{ id: number; }, {}, {}>, res: Response<Pessoa | object>): void {
+    getByIdPessoa(req: Request<{ id: number; }, {}, {}>, res: Response<Pessoa | object>): void {
         
         if (isNaN(Number(req.params.id))) {
             res.status(StatusCode.BadRequest).json({
@@ -140,6 +140,32 @@ export class PessoasController implements IPessoasController {
                     error: e,
                 });
             };
+        }
+    }
+
+    removeByIdPessoa(req: Request<{ id: number; }, {}, {}>, res: Response): void {
+        
+        if (isNaN(Number(req.params.id))) {
+            res.status(StatusCode.BadRequest).json({
+                message: "Parâmetros da requisição mal formados.",
+                error:   "Parâmetros da requisição mal formados."
+            });
+            return;
+        }
+        
+        try {
+            let result = this.pessoasService.removeByIdPessoa(req.params.id);
+            if (!result) res.sendStatus(StatusCode.NotFound);
+            else res.sendStatus(StatusCode.Success);
+        }
+
+        catch (e: any)
+        {
+            console.error("Unexpected error:", e);
+            res.status(StatusCode.InternalServerError).json({
+                message:    "Um erro interno inexperado ocorreu, por favor contate o suporte!",
+                error: e,
+            });
         }
     }
 
