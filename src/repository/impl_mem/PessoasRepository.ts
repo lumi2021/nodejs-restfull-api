@@ -1,4 +1,5 @@
 import { Pessoa } from "../../models/pessoasModel";
+import { RepositoryError, RepositoryErrorKind } from "../../types/errors/RepositoryError";
 import { IPessoasRepository } from "../IPessoasRepository";
 import { PessoaEntity, database } from "./memdb";
 
@@ -7,37 +8,48 @@ export class PessoasRepository implements IPessoasRepository {
     constructor() {}
 
     save(entry: Pessoa): Pessoa {
-        var nextId = database.pessoas.length;
+        
+        var nextId = database.pessoas.length + 1;
         entry.id = nextId;
 
         let entity: PessoaEntity = {
             id: entry.id,
-            name: entry.nome,
-            area_id: entry.area.id!,
+            nome: entry.nome,
+            funcao: entry.funcao,
         };
         
         database.pessoas.push(entity);
         return entry;
     }
     update(entry: Pessoa): Pessoa | undefined {
-        if (!entry.id) return;
-        if (!entry.area.id) return;
-        if (database.pessoas[entry.id] == null) return;
-        if (database.areas[entry.area.id] == null) return;
+
+        // Checando se alguma chave é nula
+        if (!entry.id) throw new RepositoryError(RepositoryErrorKind.UndefinedData);
+        let entry_index = entry.id - 1;
+        // checando se as chaves estão dentro dos limites do banco de dados
+        if (entry_index < 0 || entry_index-1 > database.pessoas.length) return;
+
+        // checando se alguma chave aponta para uma entrada removida
+        if (!database.pessoas[entry_index]) return;
+            
 
         let entity: PessoaEntity = {
             id: entry.id,
-            name: entry.nome,
-            area_id: entry.area.id,
+            nome: entry.nome,
+            
+            funcao: entry.funcao,
         };
         
-        database.areas[entity.id] = entity;
+        database.pessoas[entry_index] = entity;
         return entry;
     }
     remove(id: number): boolean {
-        if (id >= database.pessoas.length) return false;
-        if (database.pessoas[id] == null) return false;
-        database.pessoas[id] = null;
+        let index = id - 1;
+
+        if (index < 0 || index > database.pessoas.length) return false;
+        if (database.pessoas[index] == null) return false;
+
+        database.pessoas[index] = null;
         return true;
     }
     getAll(): Pessoa[] {
@@ -47,35 +59,27 @@ export class PessoasRepository implements IPessoasRepository {
             var e = database.pessoas[i];
             if (!e) continue;
 
-            var area = database.areas[e.area_id]!;
-
             pessoasArr.push({
                 id: e.id,
-                nome: e.name,
-                area: {
-                    id: area.id,
-                    nome: area.name,
-                },
+                nome: e.nome,
+                funcao: e.funcao,
             });
         }
 
         return pessoasArr;
     }
     getById(id: number): Pessoa | undefined {
-        if (id >= database.pessoas.length) return;
+        // Checando se o indice está dentro dos limites do banco
+        if (id < 1 || id > database.pessoas.length-1) return;
+        let index = id - 1;
 
-        let res = database.pessoas[id];
+        let res = database.pessoas[index];
         if (res == null) return;
-
-        let area = database.areas[res.area_id]!;
 
         return {
             id: res.id,
-            nome: res.name,
-            area: {
-                id: area.id,
-                nome: area.name,
-            }
+            nome: res.nome,
+            funcao: res.funcao,
         };
     }
 

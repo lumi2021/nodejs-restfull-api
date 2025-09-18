@@ -1,25 +1,31 @@
 import { Pessoa } from "../models/pessoasModel";
+import { IAreasRepository } from "../repository/IAreasRepository";
 import { IPessoasRepository } from "../repository/IPessoasRepository";
+import { RegisterError, RegisterErrorKind } from "../types/errors/RegisterError";
 import { RegisterPessoaBody } from "../types/RegisterPessoaBody";
 import { IPessoasService } from "./core/IPessoasService";
 
 export class PessoasService implements IPessoasService {
 
-    constructor(pessoasRepo: IPessoasRepository) {
+    constructor(
+        pessoasRepo: IPessoasRepository,
+        areasRepo: IAreasRepository,
+    ) {
         this.pessoaRepository = pessoasRepo;
+        this.areasRepository = areasRepo;
     }
     
     pessoaRepository: IPessoasRepository;
+    areasRepository: IAreasRepository;
 
-    public registerNewPessoa(pessoa: RegisterPessoaBody): Pessoa {
+    registerNewPessoa(pessoa: RegisterPessoaBody): Pessoa {
+
         let pessoaModel: Pessoa = {
             nome: pessoa.nome,
-            area: undefined!,
+            funcao: pessoa.funcao,
         };
 
-        this.pessoaRepository.save(pessoaModel);
-
-        return pessoaModel;
+        return this.pessoaRepository.save(pessoaModel);
     }
 
     getAllPessoa(): Pessoa[] {

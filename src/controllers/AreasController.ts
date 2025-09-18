@@ -1,32 +1,33 @@
 import { Request, Response } from 'express';
-import { Pessoa } from '../models/pessoasModel';
-import { IPessoasService } from '../services/core/IPessoasService';
-import { IPessoasController } from './core/IPessoasController';
-import { RegisterPessoaBody } from '../types/RegisterPessoaBody';
+import { RegisterAreaBody } from '../types/RegisterAreaBody';
+import { Area } from '../models/areasModel';
+import { IAreasService } from '../services/core/IAreasService';
+import { IAreasController } from './core/IAreasController';
 import { RepositoryError, RepositoryErrorKind } from '../types/errors/RepositoryError';
 import { StatusCode } from '../types/StatusCode';
+import { RegisterError, RegisterErrorKind } from '../types/errors/RegisterError';
 
-export class PessoasController implements IPessoasController {
+export class AreasController implements IAreasController {
 
-    constructor(pessoasService: IPessoasService) {
-        this.pessoasService = pessoasService;
+    constructor(areasService: IAreasService) {
+        this.areasService = areasService;
     }
     
-    pessoasService: IPessoasService;
+    areasService: IAreasService;
 
-    registerPessoa(req: Request<{}, {}, RegisterPessoaBody>, res: Response<Pessoa | object>): void {
-        let body: RegisterPessoaBody = req.body;
+    registerArea(req: Request<{}, {}, RegisterAreaBody>, res: Response<Area | object>): void {
+        let body: RegisterAreaBody = req.body;
 
-        if (!body.nome || !body.area) {
+        if (!body.nome) {
             res.status(StatusCode.BadRequest).json({
                 message: "Corpo da requisição mal formado.",
-                error:   "Corpo da requisição mal formado. Experado: { nome: String, area: Integer | String }"
+                error:   "Corpo da requisição mal formado. Experado: { nome: String }"
             });
             return;
         }
-        
+
         try {
-            let result = this.pessoasService.registerNewPessoa(body);
+            let result = this.areasService.registerNewArea(body);
             res.json(result);
         }
         
@@ -50,21 +51,42 @@ export class PessoasController implements IPessoasController {
                         return;
                 }
             }
+            else if (e instanceof RegisterError) {
+                let regError: RegisterError = e;
+                switch (regError.error) {
+
+                    case RegisterErrorKind.ArgumentNotFound:
+                        res.status(StatusCode.NotFound).json({
+                            message:    "A Área requisitada não existe.",
+                            error:      "A Área requisitada não existe.",
+                        });
+                        return;
+
+                    default:
+                        res.status(StatusCode.InternalServerError).json({
+                            message:    "Um erro interno inexperado ocorreu, por favor contate o suporte!",
+                            error: e,
+                        });
+                        return;
+                }
+            }
             else {
                 console.error("Unexpected error:", e);
                 res.status(StatusCode.InternalServerError).json({
                     message:    "Um erro interno inexperado ocorreu, por favor contate o suporte!",
                     error: e,
                 });
-            }
+            };
         }
     }
 
-    getAllPessoas(req: Request<{}, {}, {}>, res: Response<Pessoa[] | object>): void {
+    getAllAreas(req: Request<{}, {}, {}>, res: Response<Area[] | object>): void {
+
         try {
-            let result = this.pessoasService.getAllPessoa();
+            let result = this.areasService.getAllAreas();
             res.json(result);
         }
+
         catch (e: any)
         {
             if (e instanceof RepositoryError) {
@@ -96,8 +118,8 @@ export class PessoasController implements IPessoasController {
         }
     }
 
-    getByIdPessoas(req: Request<{ id: number; }, {}, {}>, res: Response<Pessoa | object>): void {
-        
+    getByIdArea(req: Request<{ id: number; }, {}, {}>, res: Response<Area | object>): void {
+
         if (isNaN(Number(req.params.id))) {
             res.status(StatusCode.BadRequest).json({
                 message: "Parâmetros da requisição mal formados.",
@@ -105,9 +127,9 @@ export class PessoasController implements IPessoasController {
             });
             return;
         }
-        
+
         try {
-            let result = this.pessoasService.getByIdPessoa(req.params.id);
+            let result = this.areasService.getByIdArea(req.params.id);
             if (!result) res.sendStatus(StatusCode.NotFound);
             else res.json(result);
         }
@@ -125,10 +147,8 @@ export class PessoasController implements IPessoasController {
                         return;
                     
                     default:
-                        console.error("Unexpected error:", e);
                         res.status(StatusCode.InternalServerError).json({
-                            message:    "Um erro interno inexperado ocorreu, por favor contate o suporte!",
-                            error: e,
+                            error:   "A operação resultou em um erro desconhecido.",
                         });
                         return;
                 }
