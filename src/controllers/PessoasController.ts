@@ -17,10 +17,10 @@ export class PessoasController implements IPessoasController {
     registerPessoa(req: Request<{}, {}, RegisterPessoaBody>, res: Response<Pessoa | object>): void {
         let body: RegisterPessoaBody = req.body;
 
-        if (!body.nome || !body.area) {
+        if (!body.nome || !body.funcao) {
             res.status(StatusCode.BadRequest).json({
                 message: "Corpo da requisição mal formado.",
-                error:   "Corpo da requisição mal formado. Experado: { nome: String, area: Integer | String }"
+                error:   "Corpo da requisição mal formado. Experado: { nome: String, funcao: String }"
             });
             return;
         }

@@ -18,10 +18,10 @@ export class AreasController implements IAreasController {
     registerArea(req: Request<{}, {}, RegisterAreaBody>, res: Response<Area | object>): void {
         let body: RegisterAreaBody = req.body;
 
-        if (!body.nome) {
+        if (!body.nome || !body.local || !body.tipo) {
             res.status(StatusCode.BadRequest).json({
                 message: "Corpo da requisição mal formado.",
-                error:   "Corpo da requisição mal formado. Experado: { nome: String }"
+                error:   "Corpo da requisição mal formado. Experado: { nome: String, local: String, tipo: String }"
             });
             return;
         }

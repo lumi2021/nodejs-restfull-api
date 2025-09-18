@@ -25,6 +25,7 @@ export class PresencasService implements IPresencasService {
         
         var pessoa = this.pessoasRepository.getById(pessoaid);
         var area = this.areasRepository.getById(areaid);
+        
         if (!pessoa || !area) throw new RegisterError(RegisterErrorKind.ArgumentNotFound);
 
         this.presencasRepository.save({
@@ -41,13 +42,32 @@ export class PresencasService implements IPresencasService {
         end: Date | undefined
     ): PresencaIntervalo {
 
-        let real_beg = beg ?? new Date();
-        let real_end = end ?? new Date();
+        let real_beg: Date;
+        let real_end: Date;
 
-        if (!beg) real_beg.setDate(real_end.getDate() - 1);
+        
+        if (!beg && !end) {
+            real_beg = new Date();
+            real_end = new Date();
+            real_beg.setDate(real_end.getDate() - 1);
+        }
+        else if (beg && end) {
+            real_beg = new Date(beg);
+            real_end = new Date(end);
+        }
+        else if (!beg && end) {
+            real_end = new Date(end);
+            real_beg = new Date(end);
+            real_beg.setDate(real_end.getDate() - 1);
+        }
+        else if (beg && !end) {
+            real_end = new Date();
+            real_beg = new Date(beg);
+        }
 
-        let dateStart = new Date(real_beg);
-        let dateEnd = new Date(real_end);
+
+        let dateStart = new Date(real_beg!);
+        let dateEnd = new Date(real_end!);
 
         let allData = this.presencasRepository.getRange(dateStart, dateEnd);
         if (pessoa) allData = allData.filter(e => e.pessoa.id == pessoa);
