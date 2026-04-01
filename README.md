@@ -1,12 +1,13 @@
-# Node.js RESTfull API
-[(pt-br) clique aqui para pular para o conteúdo em português](#api-restfull-em-nodejs)
+# Typescript RESTful API
+[(pt-br) clique aqui para pular para o conteúdo em português](#api-restfull-em-typescript)
 
 # (en) Sumary
 
-Complete RESTfull API developed for the Trackfy selective proccess.
+Complete RESTful API developed for the Trackfy selective proccess.
 The API is developed in typescript with less dependencies possible (is it even possible with node?).
 
 **The project includes:**
+- A fully working MVC RESTful API
 - Modular structure with dependence injection
 - Input data validation
 - Error handling with HTTP responses
@@ -14,12 +15,13 @@ The API is developed in typescript with less dependencies possible (is it even p
 All code comments, part of the member names and the rest of this README
 are written in portuguese to have sure there will be no problems with the code review.
 
-# API RESTfull em Node.js
+# API RESTful em Typescript
 
-API RESTfull completa desenvolvida para o processo seletivo da Trackfy.
+API RESTful completa desenvolvida para o processo seletivo da Trackfy.
 A API é desenvolvida em typescript e foca em usar o mínimo possível de dependências externas.
 
 **O projeto inclui:**
+- Uma API MVC completamente funcional
 - Estrutura modular com injeção de dependência
 - Validação de dados de entrada
 - Tratamento de erros com respostas HTTP
@@ -140,7 +142,7 @@ a interface da API foi planejada em um modelo de design inside-out, procurei faz
 retornarem dados gerais e mais genéricos, de forma que um frontend possa manipular da forma que
 preferir. Isso também implica que, em certos casos, talvez seja necessário fazer mais de uma
 requisição para obter um conjunto de dados mais amplo, mas acredito não ser problema visto que
-nada do tipo foi solicitado.
+dados específico não foram solicitados.
 
 Todos os endpoints foram testados manualmente usando postman, visto que devido ao tempo não pude
 tentar automatizar o processo.
@@ -150,9 +152,9 @@ tentar automatizar o processo.
 
 ### Modularidade:
 Como um dos requisitos do teste, a extrutura da API é completamente modular,
-seguindo os principais padrões de design do mercado.
+seguindo a arquitetura MVC e os principais padrões de design do mercado.
 A API é dividida em componentes de rota, controladores, serviços e repositório,
-sendo conectados através de ijeção de dependência. A declaração e implementação
+sendo conectados através de injeção de dependência. A declaração e implementação
 dos componentes são separadas, permitindo modificações, incrementação e refatoração
 independente.
 
